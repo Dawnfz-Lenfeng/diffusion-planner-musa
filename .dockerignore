@@ -1,0 +1,12 @@
+.git
+data/
+workspace/
+*.pth
+*.npz
+runs/
+cache/
+exp/
+logs/
+__pycache__/
+*.pyc
+reports/

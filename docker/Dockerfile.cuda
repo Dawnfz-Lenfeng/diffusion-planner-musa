@@ -1,0 +1,44 @@
+# Diffusion Planner x nuPlan mini baseline — CUDA reference image (SECONDARY).
+#
+# OPTIONAL. Reproduces the upstream-native (CUDA) environment for comparison
+# runs. The MUSA variant lives in ./Dockerfile (FROM your MUSA base image);
+# the primary path overall is source-install on an existing environment
+# (docs/REPRODUCE.md).
+#
+# Base: pytorch 2.0.1 + cu118 — matches the upstream requirement torch 2.0.0+cu118.
+
+FROM pytorch/pytorch:2.0.1-cuda11.8-cudnn8-runtime
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        git unzip wget ca-certificates libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+# pinned nuplan-devkit (see THIRD_PARTY.md)
+RUN git clone https://github.com/motional/nuplan-devkit.git third_party/nuplan-devkit \
+ && cd third_party/nuplan-devkit \
+ && git checkout e9241677997dd86bfc0bcd44817ab04fe631405b
+
+# devkit dependency stack — requirements-lock.txt holds the EXACT versions
+# validated in our baseline run (see header); requirements-nuplan-x86.txt is
+# the readable/adjustable list. Prefer the lock for reproducibility.
+COPY scripts/requirements-nuplan-x86.txt docker/requirements-lock.txt /tmp/requirements-lock.txt
+RUN pip install --no-cache-dir -r /tmp/requirements-lock.txt || \
+    pip install --no-cache-dir -r /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt \
+ && pip install --no-cache-dir --no-deps \
+        pytorch-lightning==2.0.1 timm==1.0.10 mmengine tensorboard==2.11.2 \
+ && pip install --no-cache-dir --no-deps -e third_party/nuplan-devkit
+
+COPY . /workspace
+RUN pip install --no-cache-dir --no-deps -e .
+
+ENV NUPLAN_DATA_ROOT=/data/sets/nuplan \
+    NUPLAN_MAPS_ROOT=/data/sets/nuplan/maps \
+    NUPLAN_EXP_ROOT=/workspace/exp \
+    PYTHONPATH=/workspace:/workspace/third_party/nuplan-devkit \
+    OMP_NUM_THREADS=8
+
+CMD ["/bin/bash"]

@@ -1,0 +1,20 @@
+# data (never commit)
+data/
+workspace/
+# weights & caches
+checkpoints/*.pth
+*.npz
+*.nuboard
+runs/
+cache/
+exp/
+# python
+__pycache__/
+*.pyc
+*.egg-info/
+.ipynb_checkpoints/
+# misc
+nohup.out
+logs/
+.idea/
+.vscode/

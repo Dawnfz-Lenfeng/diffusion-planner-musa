@@ -1,0 +1,49 @@
+_target_: nuplan.planning.scenario_builder.scenario_filter.ScenarioFilter
+_convert_: "all"
+
+scenario_types: # the 14 official eval types
+  - starting_left_turn
+  - starting_right_turn
+  - starting_straight_traffic_light_intersection_traversal
+  - stopping_with_lead
+  - high_lateral_acceleration
+  - high_magnitude_speed
+  - low_magnitude_speed
+  - traversing_pickup_dropoff
+  - waiting_for_pedestrian_to_cross
+  - behind_long_vehicle
+  - stationary_in_traffic
+  - near_multiple_vehicles
+  - changing_lane
+  - following_lane_with_lead
+
+scenario_tokens:
+  - "13b93b0c326b5345"
+  - "1f151e15c9cf5c81"
+  - "262a4b7a1f2c5ab6"
+  - "3389c65926b55790"
+  - "471c1f5d75cb5799"
+  - "485e78d3d4035b52"
+  - "530defb3fc395ff3"
+  - "69e109f6e2a85ab4"
+  - "a3a4c3242d345082"
+  - "aa8237ebd54f5a0b"
+  - "c7470ea392845bee"
+  - "d0b68e15688c58ad"
+  - "e4eb6ff392715216"
+  - "f6f9afda75e251ae"
+
+log_names: null
+map_names: null
+
+num_scenarios_per_type: 1
+limit_total_scenarios: null
+timestamp_threshold_s: 15
+ego_displacement_minimum_m: null
+ego_start_speed_threshold: null
+ego_stop_speed_threshold: null
+speed_noise_tolerance: null
+
+expand_scenarios: false
+remove_invalid_goals: true
+shuffle: false
